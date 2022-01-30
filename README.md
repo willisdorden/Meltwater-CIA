@@ -3,6 +3,7 @@
 In the project directory, you can run:
 ### Api directory: CIA-API
 ### React FrontEnd: meltwater-cia
+### DB: Sqlite3
 
 
 ```
