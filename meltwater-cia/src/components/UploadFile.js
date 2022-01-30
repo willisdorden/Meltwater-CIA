@@ -30,7 +30,6 @@ const UploadFile = (props) => {
             setProgress(Math.round((100 * event.loaded) / event.total));
         })
             .then((response) => {
-                console.log(response)
                 if (response.status === 202) {
                     setProgress(0)
                     setMessage(response.data.message)

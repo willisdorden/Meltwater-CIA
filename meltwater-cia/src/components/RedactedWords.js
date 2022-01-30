@@ -30,7 +30,6 @@ const RedactedWords = (props) => {
         }
         RedactFileService.redactFile(data)
             .then((response) => {
-                console.log('response', response);
                 setMessage(response.data.message);
                 setIsError(false);
                 window.location.reload(true)
