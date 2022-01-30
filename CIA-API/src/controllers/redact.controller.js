@@ -33,9 +33,7 @@ const redactFile = async (req, res) => {
 const searchWord = async (req, res) => {
     let fileInfos = []
     const data = await getDataFromDB(req.params.word);
-    console.log('data', data)
 
-    //this will push into the array the name and the url for each filename in the db.
     fileInfos.push({
         name: data.fileName,
         url: baseUrl + data.fileName,
@@ -68,7 +66,7 @@ const insertDataIntoDb = (words, originalFileName, redactedFileName) => {
         if (err) {
             return console.log(err.message)
         }
-        console.log('a row has been inserted')
+        console.log('A row has been inserted')
     })
 
     db.close((err) => {

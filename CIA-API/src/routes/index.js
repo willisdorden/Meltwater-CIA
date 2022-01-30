@@ -4,7 +4,7 @@ const fileController = require("../controllers/file.controller");
 const redactController = require("../controllers/redact.controller");
 
 let routes = (app) => {
-    router.post("/upload", fileController.upload);
+    router.post("/upload/:name", fileController.upload);
     router.get("/files", fileController.getListFiles);
     router.get("/files/:name", fileController.download);
     router.post('/redact/file', redactController.redactFile)

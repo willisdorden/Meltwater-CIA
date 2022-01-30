@@ -5,15 +5,22 @@ const baseUrl = "http://localhost:8080/files/";
 const upload = async (req, res) => {
     try {
         //check and see if file is already in the folder
-        await uploadFile(req, res);
+        const directoryPath = __basedir + "/resources/assets/uploads/" + req.params.name;
+        if (fs.existsSync(directoryPath)) {
+            res.status(202).send({
+                message: "File Name: " + req.params.name + " already exist!" ,
+            });
+        } else {
+            await uploadFile(req, res);
 
-        if (req.file === undefined) {
-            return res.status(400).send({ message: "Please upload a file!" });
+            if (req.file === undefined) {
+                return res.status(400).send({ message: "Please upload a file!" });
+            }
+
+            res.status(200).send({
+                message: "Uploaded the file successfully: " + req.file.originalname,
+            });
         }
-
-        res.status(200).send({
-            message: "Uploaded the file successfully: " + req.file.originalname,
-        });
     } catch (err) {
         if (err.code === "LIMIT_FILE_SIZE") {
             return res.status(500).send({
@@ -29,7 +36,6 @@ const upload = async (req, res) => {
 
 const getListFiles = (req, res) => {
     const directoryPath = __basedir + "/resources/assets/uploads/";
-    console.log('this is getListFiles')
 
     fs.readdir(directoryPath, function (err, files) {
         if (err) {
