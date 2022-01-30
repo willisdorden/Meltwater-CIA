@@ -1,0 +1,40 @@
+.container {
+    width: 33%;
+}
+.file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 300px;
+    vertical-align: middle;
+    color: white;
+}
+.file-header {
+    margin-top: 10px !important;
+    color: white;
+    padding-bottom: 10px;
+}
+.list-container {
+    padding-top: 11px;
+}
+.list-group {
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+
+.list-header {
+    margin-top: 10px !important;
+    color: white;
+}
+
+.upload-message {
+    font-weight: bold;
+    color: #63A84E;
+    margin-top: 20px !important;
+}
+
+.upload-message.error{
+    color: #DA4148;
+}

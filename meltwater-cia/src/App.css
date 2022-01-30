@@ -1,0 +1,21 @@
+.App {
+  background-image: url(../image/cia2.jpg);
+  background-size: cover;
+  height: 100vh;
+  background-repeat:no-repeat;
+}
+
+.App-content {
+  padding: 25px;
+}
+
+/*@media (min-width: 650px ) {*/
+/*  .App {*/
+/*    background-position: center center;*/
+/*  }*/
+
+/*  .App-content {*/
+/*    align-items: flex-end;*/
+/*    justify-content: center;*/
+/*  }*/
+/*}*/
