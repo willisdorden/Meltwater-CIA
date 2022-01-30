@@ -78,35 +78,39 @@ const insertDataIntoDb = (words, originalFileName, redactedFileName) => {
 }
 
 const getDataFromDB = async (word) => {
-    let db = new sqlite3.Database('./db/meltwaterDB.db', (err) => {
-        if (err) {
-            console.error(err.message);
-        }
-        console.log('Connected to the database.');
-    });
+    try {
+        let db = new sqlite3.Database('./db/meltwaterDB.db', (err) => {
+            if (err) {
+                console.error(err.message);
+            }
+            console.log('Connected to the database.');
+        });
 
-    let sql = `SELECT id,
+        let sql = `SELECT id,
                       fileName,
                       redactedFileName,
                       words
                FROM RedactedWords
                where words LIKE ?`;
 
-    return new Promise((resolve, reject) => {
-        db.get(sql,[`%${word}%`], (err, row) => {
-            if (err) {
-                reject(err);
-            }
-
-            db.close((err) => {
+        return new Promise((resolve, reject) => {
+            db.get(sql,[`%${word}%`], (err, row) => {
                 if (err) {
-                    return console.error(err.message);
+                    reject(err);
                 }
-                console.log('Close the database connection.');
+
+                db.close((err) => {
+                    if (err) {
+                        return console.error(err.message);
+                    }
+                    console.log('Close the database connection.');
+                });
+                resolve(row)
             });
-            resolve(row)
-        });
-    })
+        })
+    } catch (e) {
+        return console.error(e.message);
+    }
 }
 
 module.exports = {
