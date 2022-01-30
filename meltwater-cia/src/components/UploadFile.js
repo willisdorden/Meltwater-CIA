@@ -30,9 +30,18 @@ const UploadFile = (props) => {
             setProgress(Math.round((100 * event.loaded) / event.total));
         })
             .then((response) => {
-                setMessage(response.data.message);
-                setIsError(false);
-                return UploadService.getFiles();
+                console.log(response)
+                if (response.status === 202) {
+                    setProgress(0)
+                    setMessage(response.data.message)
+                    setShowBar( false)
+                    setIsError(true)
+                    return UploadService.getFiles();
+                } else {
+                    setMessage(response.data.message);
+                    setIsError(false);
+                    return UploadService.getFiles();
+                }
             })
             .then((files) => {
                 setFileInfos(files.data);
@@ -68,6 +77,9 @@ const UploadFile = (props) => {
                 disabled={!selectedFile}
                 handleClick={handleClickHandler}
             />
+            <Typography variant="subtitle2" className={`upload-message ${isError ? "error" : ""}`}>
+                {message}
+            </Typography>
         </Stack>
             <Stack direction="row" alignItems="center" spacing={5}>
                 {selectedFile && selectedFile.length > 0 && (<div className='file-name'>
@@ -76,9 +88,6 @@ const UploadFile = (props) => {
                     </Typography>
                     <a>{selectedFile && selectedFile.length > 0 ? selectedFile[0].name : null}</a>
                 </div>)}
-            <Typography variant="subtitle2" className={`upload-message ${isError ? "error" : ""}`}>
-                {message}
-            </Typography>
                 {fileInfos && fileInfos.length > 0 && (
                     <div className='list-container' >
                         <List

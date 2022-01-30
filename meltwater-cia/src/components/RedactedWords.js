@@ -6,6 +6,8 @@ import MyButton from "./UI/Button";
 import Stack from "@mui/material/Stack";
 import List from "./UI/List";
 import RedactFileService from "../services/RedactFile.service";
+import UploadService from "../services/UploadFiles.service";
+import UploadFile from "./UploadFile";
 
 const RedactedWords = (props) => {
     const [redactedWords, setRedactedWords] = useState(undefined);
@@ -13,12 +15,12 @@ const RedactedWords = (props) => {
     const [message, setMessage] = useState();
     const [fileName, setFileName] = useState();
     const [searchWord, setSearchWord] = useState()
+    const [fileInfos, setFileInfos] = useState([]);
 
     const handleChangeHandler = (event) => {
         event.preventDefault();
         setRedactedWords(event.target.value.split(/"(.*?)"|'(.*?)'|[ ,]+/g).filter(Boolean))
         setFileName(props.name);
-        console.log(redactedWords);
     }
 
     const handleClickHandler = () => {
@@ -26,11 +28,12 @@ const RedactedWords = (props) => {
             name: fileName,
             redactedWords: redactedWords,
         }
-        console.log('data', data)
         RedactFileService.redactFile(data)
             .then((response) => {
-                console.log(response)
+                console.log('response', response);
+                setMessage(response.data.message);
                 setIsError(false);
+                window.location.reload(true)
             })
             .catch(() => {
                 setMessage( "Could not upload the file!")
@@ -44,12 +47,9 @@ const RedactedWords = (props) => {
     }
 
     const handleSearchWordClickHandler = () => {
-        // const word = {
-        //     word: searchWord
-        // }
         RedactFileService.searchWord(searchWord)
             .then((response) => {
-                console.log(response)
+                setFileInfos(response.data)
             })
             .catch(() => {
                 setMessage( "Could not search for Word!")
@@ -102,10 +102,10 @@ const RedactedWords = (props) => {
                 <Typography variant="subtitle2" className={`upload-message ${isError ? "error" : ""}`}>
                     {message}
                 </Typography>
-                {redactedWords && redactedWords.length > 0 && (
+                {fileInfos && fileInfos.length > 0 && (
                     <List
-                        typography="Redacted Words"
-                        array={redactedWords}
+                        typography="Search Results"
+                        array={fileInfos}
                     />
                 )}
             </Stack>

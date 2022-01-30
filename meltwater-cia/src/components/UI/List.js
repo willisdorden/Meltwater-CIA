@@ -13,7 +13,7 @@ const List = (props) => {
                         <ListItem
                             divider
                             key={index}>
-                            <a href={file.url ? file.url : null}>{file.name ? file.name : file}</a>
+                            <a className='file-list' href={file.url ? file.url : null}>{file.name ? file.name : file}</a>
                         </ListItem>
                     ))}
             </ul>
