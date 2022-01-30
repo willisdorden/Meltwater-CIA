@@ -1,6 +1,5 @@
 const fs = require("fs");
-const {log} = require("util");
-const baseUrl = "http://localhost:8080/resources/assets/uploads/";
+const baseUrl = "http://localhost:8080/files/";
 const sqlite3 = require('sqlite3').verbose();
 
 
@@ -20,6 +19,9 @@ const redactFile = async (req, res) => {
                 if (err) return console.log(err);
             });
             insertDataIntoDb(words,name,redactedName)
+            res.status(200).send({
+                message: "File has been Redacted",
+            });
         })
     } catch (err) {
         res.status(500).send({
@@ -29,34 +31,39 @@ const redactFile = async (req, res) => {
 }
 
 const searchWord = async (req, res) => {
-    console.log(req.params.word)
     let fileInfos = []
     const data = await getDataFromDB(req.params.word);
     console.log('data', data)
-//    make a call to the db and get the name of the files by the search word.
 
     //this will push into the array the name and the url for each filename in the db.
-    // fileInfos.push({
-    //     name: fileName,
-    //     url: baseUrl + fileName,
-    // });
+    fileInfos.push({
+        name: data.fileName,
+        url: baseUrl + data.fileName,
+    });
+    fileInfos.push({
+        name: data.redactedFileName,
+        url: baseUrl + data.redactedFileName,
+    })
 
     res.status(200).send(fileInfos);
 
 }
 const insertDataIntoDb = (words, originalFileName, redactedFileName) => {
+
     let db = new sqlite3.Database('./db/meltwaterDB.db', (err) => {
         if (err) {
             console.error(err.message);
         }
         console.log('Connected to the database.');
     });
+
     let sql = `INSERT INTO RedactedWords (
                               fileName,
                               redactedFileName,
                               words
                           )
                           VALUES (?,?,?)`
+
     db.run(sql,[originalFileName, redactedFileName,  words.join()], (err) => {
         if (err) {
             return console.log(err.message)
@@ -79,26 +86,29 @@ const getDataFromDB = async (word) => {
         }
         console.log('Connected to the database.');
     });
+
     let sql = `SELECT id,
                       fileName,
                       redactedFileName,
                       words
                FROM RedactedWords
-               where words = ?`;
+               where words LIKE ?`;
 
-    db.get(sql, [word], (err, row) => {
-        if (err) {
-            throw err;
-        }
-        console.log(row)
-        return row
-    });
-    db.close((err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        console.log('Close the database connection.');
-    });
+    return new Promise((resolve, reject) => {
+        db.get(sql,[`%${word}%`], (err, row) => {
+            if (err) {
+                reject(err);
+            }
+
+            db.close((err) => {
+                if (err) {
+                    return console.error(err.message);
+                }
+                console.log('Close the database connection.');
+            });
+            resolve(row)
+        });
+    })
 }
 
 module.exports = {

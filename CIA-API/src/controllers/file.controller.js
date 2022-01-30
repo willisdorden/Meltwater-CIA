@@ -4,6 +4,7 @@ const baseUrl = "http://localhost:8080/files/";
 
 const upload = async (req, res) => {
     try {
+        //check and see if file is already in the folder
         await uploadFile(req, res);
 
         if (req.file === undefined) {
