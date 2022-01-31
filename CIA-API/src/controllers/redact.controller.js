@@ -13,8 +13,8 @@ const redactFile = async (req, res) => {
             if(err) {
                 return console.log(err);
             }
-            const regexFromMyArray = new RegExp(words.join("|"), 'gi');
-            const document = data.replace(regexFromMyArray, 'xxxxx')
+            const wordsToRedact = new RegExp(words.join("|"), 'gi');
+            const document = data.replace(wordsToRedact, 'xxxxx')
             fs.writeFile(__basedir + "/resources/assets/uploads/"+ redactedName , document, 'utf8', function (err) {
                 if (err) return console.log(err);
             });
