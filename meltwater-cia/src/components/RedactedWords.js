@@ -1,6 +1,6 @@
 import Card from "./UI/Card";
 import {TextField, Typography} from "@mui/material";
-import {useState} from "react";
+import {useRef, useState} from "react";
 import './RedactedWords.css';
 import MyButton from "./UI/Button";
 import Stack from "@mui/material/Stack";
@@ -32,7 +32,9 @@ const RedactedWords = (props) => {
             .then((response) => {
                 setMessage(response.data.message);
                 setIsError(false);
-                window.location.reload(true)
+                props.setFileName((prev) => {
+                  return [...prev, {name: response.data.redactedName, url: response.data.url}]
+                })
             })
             .catch(() => {
                 setMessage( "Could not upload the file!")

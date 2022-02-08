@@ -15,13 +15,6 @@ const UploadFile = (props) => {
     const [progress, setProgress] = useState(0);
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
-    const [fileInfos, setFileInfos] = useState([]);
-
-    useEffect(() => {
-        UploadService.getFiles().then((response) => {
-          setFileInfos(response.data)
-            });
-        },[]);
 
     const handleClickHandler = () => {
         setShowBar(true);
@@ -43,7 +36,7 @@ const UploadFile = (props) => {
                 }
             })
             .then((files) => {
-                setFileInfos(files.data);
+                props.setFileInfos(files.data);
             })
             .catch(() => {
                 setProgress(0)
@@ -87,11 +80,11 @@ const UploadFile = (props) => {
                     </Typography>
                     <a>{selectedFile && selectedFile.length > 0 ? selectedFile[0].name : null}</a>
                 </div>)}
-                {fileInfos && fileInfos.length > 0 && (
+                {props.fileInfos && props.fileInfos.length > 0 && (
                     <div className='list-container' >
                         <List
                             typography="List of Files"
-                            array={fileInfos}
+                            array={props.fileInfos}
                         />
                     </div>
                 )}

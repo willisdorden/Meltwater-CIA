@@ -1,21 +1,27 @@
 import './App.css';
 import UploadFile from "./components/UploadFile";
 import RedactedWords from "./components/RedactedWords";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import UploadService from "./services/UploadFiles.service";
 
 function App() {
     const [fileName, setFileName] = useState();
+    const [fileInfos, setFileInfos] = useState([]);
+
+    useEffect(() => {
+        UploadService.getFiles().then((response) => {
+            setFileInfos(response.data)
+        });
+    },[]);
+
     const fileNameHandler = (fileName) => {
         setFileName(fileName);
     }
 
   return (
     <div className="App">
-            <UploadFile name={fileNameHandler}/>
-            <RedactedWords name={fileName}/>
-        {/*save the words in a fake back in and has the redact name and the unredact name with each word.
-        So you can type in the redacted word and search backend and display the redacted and unredacted text files so you can down load them.*/}
-
+            <UploadFile name={fileNameHandler} fileInfos={fileInfos} setFileInfos={setFileInfos}/>
+            <RedactedWords name={fileName} setFileName={setFileInfos}/>
     </div>
   );
 }
