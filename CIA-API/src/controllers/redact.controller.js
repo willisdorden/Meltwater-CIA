@@ -19,8 +19,11 @@ const redactFile = async (req, res) => {
                 if (err) return console.log(err);
             });
             insertDataIntoDb(words,name,redactedName)
+            //pass the redacted name
             res.status(200).send({
                 message: "File has been Redacted",
+                redactedName: redactedName,
+                url: baseUrl + redactedName,
             });
         })
     } catch (err) {
